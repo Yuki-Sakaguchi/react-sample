@@ -1,0 +1,101 @@
+<!--
+
+Reactをとりあえす触ってみる。
+JSXは使わない。
+
+-->
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>React</title>
+  </head>
+  <body>
+    <div id="app">
+      <!-- ここにアプリが描画される -->
+    </div>
+
+    <!-- reactライブラリ読み込み -->
+    <script src="./js/react.js"></script>
+    <script src="./js/react-dom.js"></script>
+
+    <!-- react実装 -->
+    <script>
+      var TextAreaCounter = React.createClass({
+        // プロパティの設定
+        propTypes: {
+          defaultValue: React.PropTypes.string,
+        },
+
+        // プロパティの初期値設置
+        getDefaultProps: function() {
+          console.log('getDefaultProps');
+          return {
+            defaultValue: '',
+          };
+        },
+
+        // ステータスの初期化
+        getInitialState: function() {
+          console.log('getInitialState');
+          return {
+            text: this.props.defaultValue,
+          }
+        },
+
+        // コンポーネントの状態を更新
+        componentWillReceiveProps: function(newProps) {
+          console.log('componentWillReceiveProps');
+          this.setState({
+            text: newProps.defaultValue,
+          });
+        },
+
+        // textareaの変更
+        _textChange: function(e) {
+          console.log('textChange');
+          this.setState({
+            text: e.target.value,
+          });
+        },
+
+        // 描画
+        render: function() {
+          console.log('render');
+
+          // propsやstateにアクセス
+          console.log(this.props);
+          console.log(this.state);
+
+          return React.DOM.div(null, 
+            React.DOM.textarea({
+              value: this.state.text,
+              onChange: this._textChange,
+            }),
+            React.DOM.h3(null, this.state.text.length),
+          );
+        }
+      });
+
+      // コンポーネントを配置
+      var myTextAreaConter = ReactDOM.render(
+        React.createElement(TextAreaCounter, {
+          defaultValue: 'Hello'
+        }),
+        document.getElementById('app')
+      );
+
+      // コンポーネントの外からアクセス
+      myTextAreaConter.componentWillReceiveProps({
+        defaultValue: '外部からの設定'
+      });
+
+      // コンポーネントの最上位のノード情報を取得
+      var reactAppNode = ReactDOM.findDOMNode(myTextAreaConter);
+      console.log(reactAppNode.parentNode === document.getElementById('app')); //-> true
+
+    </script>
+  </body>
+</html>

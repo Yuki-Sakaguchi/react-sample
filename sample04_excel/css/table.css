@@ -1,0 +1,33 @@
+* {
+  box-sizing: border-box;
+}
+
+table {
+  border: 1px solid #222;
+}
+
+thead {
+  cursor: pointer;
+}
+
+th,
+td {
+  padding: 5px;
+}
+
+td {
+  border-top: 1px solid #222;
+}
+
+.toolbar {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.toolbar a {
+  background-color: black;
+  color: white;
+  text-decoration: none;
+  padding: 10px;
+  margin: 10px;
+}

@@ -1,0 +1,110 @@
+<!--
+
+Reactでライフサイクルを学ぶ。
+
+-->
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>React</title>
+  </head>
+  <body>
+    <div id="app">
+      <!-- ここにアプリが描画される -->
+    </div>
+
+    <!-- reactライブラリ読み込み -->
+    <script src="./js/react.js"></script>
+    <script src="./js/react-dom.js"></script>
+
+    <!-- react実装 -->
+    <script>
+      // コンポーネントを定義
+      var TextAreaCounter = React.createClass({
+        // コンソールに表示する関数
+        _log: function(methodName, args) {
+          console.log(methodName, args);
+        },
+
+        // ２回目以降のプロパティ、ステートが変更された際のrenderの直前
+        componentWillUpdate: function() {
+          this._log('componentWillUpdate', arguments);
+        },
+
+        // renderメソッドの処理が完了し、DOMへの変更が適応された後
+        componentDidUpdate: function(oldProps, oldState) {
+          this._log('componentDidUpdate', arguments);
+
+          // 文字数制限
+          if (this.state.text.length > 5) {
+            this.replaceState(oldState); //-> setStateはマージだけど、replaceStateは置き換え
+          }
+        },
+
+        // ノードがDOMに挿入される直前
+        componentWillMount: function() {
+          this._log('componentWillMount', arguments);
+        },
+
+        // ノードがDOMから削除される直前
+        componentDidMount: function() {
+          this._log('componentDidMount', arguments);
+        },
+
+        // コンポーネントがDOMから削除される直前
+        componentWillUnmount: function() {
+          this._log('componentWillUnmount', arguments);
+        },
+
+        // プロパティの設定
+        propTypes: {
+          defaultValue: React.PropTypes.string,
+        },
+
+        // プロパティの初期値設置
+        getDefaultProps: function() {
+          return {
+            defaultValue: '',
+          };
+        },
+
+        // ステータスの初期化
+        getInitialState: function() {
+          return {
+            text: this.props.defaultValue,
+          }
+        },
+
+        // テキストの変更
+        _textChange: function(e) {
+          this.setState({
+            text: e.target.value,
+          });
+        },
+
+        // 描画
+        render: function() {
+          this._log('render', arguments);
+          return React.DOM.div(null, 
+            React.DOM.textarea({
+              value: this.state.text,
+              onChange: this._textChange,
+            }),
+            React.DOM.h3(null, this.state.text.length),
+          );
+        },
+      });
+
+      var myTextAreaComponent = ReactDOM.render(
+        React.createElement(TextAreaCounter, {
+          defaultValue: 'Hello'
+        }),
+        document.getElementById('app')
+      );
+
+    </script>
+  </body>
+</html>

@@ -1,0 +1,145 @@
+<!--
+
+Reactでライフサイクルでミックスインを使う。
+
+-->
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>React</title>
+  </head>
+  <body>
+    <div id="app">
+      <!-- ここにアプリが描画される -->
+    </div>
+
+    <!-- reactライブラリ読み込み -->
+    <script src="./js/react.js"></script>
+    <script src="./js/react-dom.js"></script>
+
+    <!-- react実装 -->
+    <script>
+      // ミックスイン
+      var logMixin = {
+        // コンソールに表示する関数
+        _log: function(methodName, args) {
+          console.log(`${this.name} :: ${methodName}`, args);
+        },
+
+        // ２回目以降のプロパティ、ステートが変更された際のrenderの直前
+        componentWillUpdate: function() {
+          this._log('componentWillUpdate', arguments);
+        },
+
+        // renderメソッドの処理が完了し、DOMへの変更が適応された後
+        componentDidUpdate: function(oldProps, oldState) {
+          this._log('componentDidUpdate', arguments);
+        },
+
+        // ノードがDOMに挿入される直前
+        componentWillMount: function() {
+          this._log('componentWillMount', arguments);
+        },
+
+        // ノードがDOMから削除される直前
+        componentDidMount: function() {
+          this._log('componentDidMount', arguments);
+        },
+
+        // コンポーネントがDOMから削除される直前
+        componentWillUnmount: function() {
+          this._log('componentWillUnmount', arguments);
+        },
+      };
+
+      // 親コンポーネント
+      var TextAreaCounter = React.createClass({
+        name: 'TextAreaCounter',
+        mixins: [logMixin],
+
+        // プロパティの設定
+        propTypes: {
+          defaultValue: React.PropTypes.string,
+        },
+
+        // プロパティの初期値設置
+        getDefaultProps: function() {
+          return {
+            defaultValue: '',
+          };
+        },
+
+        // ステータスの初期化
+        getInitialState: function() {
+          return {
+            text: this.props.defaultValue,
+          }
+        },
+
+        // テキストの変更
+        _textChange: function(e) {
+          this.setState({
+            text: e.target.value,
+          });
+        },
+
+        // 描画
+        render: function() {
+          console.log(this.name + 'render()', arguments);
+
+          var counter = null;
+          if (this.state.text.length > 0) {
+            // 文字があればカウンターを作成
+            counter = React.DOM.h3(null,
+              React.createElement(Counter, {
+                count: this.state.text.length
+              })
+            );
+          }
+
+          return React.DOM.div(null, 
+            React.DOM.textarea({
+              value: this.state.text,
+              onChange: this._textChange,
+            }),
+            counter
+          );
+        },
+      });
+
+      // 子コンポーネント
+      var Counter = React.createClass({
+        name: 'Counter',
+        mixins: [logMixin],
+
+        // プロパティ定義
+        propTypes: {
+          count: React.PropTypes.number.isRequired,
+        },
+
+        // componentWillUpdateの直前に呼び出される、falseを返せば更新がキャンセルされ、renderされない
+        shouldComponentUpdate: function(nextProps, nextState_ignore) {
+          this._log('shouldComponentUpdate', arguments);
+          return nextProps.count !== this.props.count;
+        },
+
+        // 描画
+        render: function() {
+          console.log(this.name + ' :: render()', arguments);
+          return React.DOM.span(null, this.props.count);
+        }
+      });
+
+      var myTextAreaComponent = ReactDOM.render(
+        React.createElement(TextAreaCounter, {
+          defaultValue: 'Hello'
+        }),
+        document.getElementById('app')
+      );
+
+    </script>
+  </body>
+</html>
