@@ -1,0 +1,13 @@
+/**
+ *  ロゴ
+ */
+.Logo {
+  display: inline-block;
+  vertical-align: middle;
+}/**
+ *  メイン処理
+ */
+html {
+  background-color: white;
+  font: 16px Arial;
+}

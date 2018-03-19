@@ -1,0 +1,21 @@
+{
+  "name": "sample06_build",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "sh scripts/build.sh",
+    "watch": "watch \"sh scripts/build.sh\" js/source css",
+    "deploy": "sh scripts/deploy.sh"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-react": "^6.24.1",
+    "cssshrink": "0.0.5",
+    "react": "^16.2.0",
+    "react-dom": "^16.2.0",
+    "uglify": "^0.1.5"
+  }
+}
