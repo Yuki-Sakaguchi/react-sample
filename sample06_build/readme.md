@@ -10,7 +10,7 @@ npm run build
 npm run watch
 ~~~
 
-## ファイルの修正を監視
+## デプロイ
 ~~~
 sh scripts/deploy.sh
 ~~~
